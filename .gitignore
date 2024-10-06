@@ -112,3 +112,11 @@ buildNumber.properties
 
 #HTMLReports
 *.html
+
+#Extent properties
+src/test/resources/extent.properties
+#Extent-config xml file, (it can be personalized)
+src/test/resources/extent-config.xml
+#runner folder will be ignored also because each person need to run with different tag
+runners/
+.DS_Store
