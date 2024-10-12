@@ -30,5 +30,31 @@
             <version>7.10.2</version>
             <scope>test</scope>
         </dependency>
+        <!-- {Apache Log4J} Required dependencies are two: (core and API).
+
+            Apache Log4J is a Java library that provides a flexible and powerful framework to log messages
+            from different levels, which include: (e.g. INFO, DEBUG, WARN, ERROR and FATAL) levels.
+
+            The logged messages can be saved to various destinations:
+                - such as a database
+                - file
+                - or other external systems.
+
+           Log4J can be used for:
+                - better-debugging
+                - log steps for more informative test reporting
+        -->
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.24.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.24.1</version>
+        </dependency>
     </dependencies>
 </project>
