@@ -1,5 +1,8 @@
 package utilities;
 
+import utilities.enums.LogType;
+import utilities.enums.TextFormat;
+
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

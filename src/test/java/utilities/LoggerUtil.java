@@ -3,6 +3,8 @@ package utilities;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utilities.enums.TextFormat;
+
 /**
  * <h1>{@code LoggerUtil}: A utility class for logging messages at various levels.</h1>
  * <p>

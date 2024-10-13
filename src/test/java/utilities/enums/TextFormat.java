@@ -1,4 +1,7 @@
-package utilities;
+package utilities.enums;
+
+import utilities.ConsoleUtil;
+import utilities.LoggerUtil;
 
 /**
  * <h2>Enum representing various text formatting options for console outputs.</h2>

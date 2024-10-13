@@ -1,4 +1,6 @@
-package utilities;
+package utilities.enums;
+
+import utilities.LoggerUtil;
 
 /**
  * <h2>Enum representing simple log types used for basic console logging.</h2>
