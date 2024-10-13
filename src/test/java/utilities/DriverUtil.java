@@ -18,11 +18,6 @@ public class DriverUtil {
      *          1. CONSTANTS
      *****************************************
      */
-    // Default symbols for success, warning or error messages.
-    private static final String SUCCESS_MESSAGE_SYMBOL = "🟢";
-    private static final String WARNING_MESSAGE_SYMBOL = "🟡";
-    private static final String ERROR_MESSAGE_SYMBOL   = "🔴";
-
     // Thread-safety for driver instance, useful for parallel testing modes.
     private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
 
@@ -71,15 +66,31 @@ public class DriverUtil {
      * This method requires a BrowserType argument, provided by the BrowserType enum class.
      * </p>
      *
-     * @param browser the type of browser for which the WebDriver is to be initialised (e.g., CHROME, FIREFOX).
-     * @return the initialised WebDriver instance for the specified browser.
+     * @param browser the type of browser for which the WebDriver is to be initialised (e.g. CHROME, FIREFOX).
      * @see BrowserType
      * @see #initDriver(BrowserType)
      */
-    public static WebDriver setDriverInstance(BrowserType browser) {
+    public static void setDriverInstance(BrowserType browser) {
         browserName = browser.toString();
         if (DRIVER.get() == null) {
             initDriver(browser);
+        }
+    }
+    /**
+     * <h2>{@code getDriverInstance()}: Retrieves the WebDriver instance associated with the current thread.</h2>
+     * <p>
+     * This method checks if a WebDriver instance has been initialised for the current thread.
+     * If the instance is not set, a {@code RuntimeException} is thrown. Otherwise, it returns
+     * the WebDriver instance, ensuring thread-safe access through {@code ThreadLocal}.
+     * </p>
+     *
+     * @return the WebDriver instance for the current thread
+     * @throws RuntimeException if the WebDriver instance is not set for the current thread
+     * @see #DRIVER
+     */
+    public static WebDriver getDriverInstance() {
+        if (DRIVER.get() == null) {
+            throw new RuntimeException("Driver instance not set.");
         }
         return DRIVER.get();
     }
@@ -96,12 +107,20 @@ public class DriverUtil {
             if (DRIVER.get() != null) {
                 DRIVER.get().quit();
                 DRIVER.remove();
-                System.out.println(SUCCESS_MESSAGE_SYMBOL + browserName + " driver successfully quit.");
+                System.out.println(
+                        ConsoleUtil.getTextFormat(TextFormat.SUCCESS_MESSAGE_SYMBOL)
+                        + browserName
+                        + " driver successfully quit."
+                );
                 return;
             }
             throw new NoSuchMethodException();
         } catch (NoSuchMethodException e) {
-            System.out.println(ERROR_MESSAGE_SYMBOL + " " + "DRIVER is null. Please set a driver instance.");
+            System.out.println(
+                    ConsoleUtil.getTextFormat(TextFormat.ERROR_MESSAGE_SYMBOL)
+                    + " "
+                    + "DRIVER is null. Please set a driver instance."
+            );
         }
     }
     /*
@@ -140,10 +159,12 @@ public class DriverUtil {
      * @see BrowserType
      */
     private static void initDriver(BrowserType browser) {
-        String successMessage = SUCCESS_MESSAGE_SYMBOL + browser + " " + "driver successfully initialised.";
+        String successMessage =
+                ConsoleUtil.getTextFormat(TextFormat.SUCCESS_MESSAGE_SYMBOL)
+                + browser + " " + "driver successfully initialised.";
         String headless = "--headless";
         String defaultMessage =
-                WARNING_MESSAGE_SYMBOL
+                ConsoleUtil.getTextFormat(TextFormat.WARNING_MESSAGE_SYMBOL)
                         + " "
                         + "Driver definition unclear: "
                         + "'" + browser + "'."
