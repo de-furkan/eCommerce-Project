@@ -2,11 +2,51 @@ package utilities;
 
 import utilities.enums.LogType;
 import utilities.enums.TextFormat;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * <h1>Utility class providing a set of methods for console output formatting and logging with symbols, colours, and styles.</h1>
+ * <p>
+ * The {@code ConsoleUtil} class includes methods to print styled text in various formats (bold, underlined, coloured)
+ * and background colours in the console. It provides message symbols (success, error, warning) and ANSI codes
+ * for colours and text formatting. This class is also capable of formatting and logging messages with associated
+ * timestamps in the London time zone (GMT+1).
+ * </p>
+ * <h2>Key Features:</h2>
+ * <ul>
+ *     <li>Support for console text colour, bold, underline, and background formatting.</li>
+ *     <li>Message symbols for success, warning, error, informational, and debug logs.</li>
+ *     <li>Logging methods for console output with symbols, colours, and timestamps.</li>
+ *     <li>Utility method to display available styles and colours.</li>
+ *     <li>Text formatting retrieval based on the {@code TextFormat} enum.</li>
+ * </ul>
+ *
+ * <h2>Thread-Safety Considerations:</h2>
+ * <p>
+ * The class makes use of static constants for colours and symbols but does not maintain any state across threads.
+ * It ensures consistent and thread-safe formatting behaviour for console outputs.
+ * </p>
+ *
+ * <h2>Methods Provided:</h2>
+ * <ul>
+ *     <li>{@code printStylingOptions()}: Displays available symbols, colours, and text styles for console outputs.</li>
+ *     <li>{@code getTextFormat(TextFormat)}: Retrieves the ANSI escape code for a specific format or symbol.</li>
+ *     <li>{@code log(String, LogType)}: Formats and returns a log message with a timestamp, symbol, and colour based on the log type.</li>
+ * </ul>
+ *
+ * <h2>Design Notes:</h2>
+ * <ul>
+ *     <li>All methods are static, and the class cannot be instantiated.</li>
+ *     <li>Formatting is applied via ANSI escape codes, which are reset after each console message.</li>
+ *     <li>The class provides colour and style options for both text and backgrounds.</li>
+ * </ul>
+ *
+ * @author Furkan O.
+ * @version 1.0
+ * @since 2024
+ */
 public class ConsoleUtil {
     /*
      *****************************************
