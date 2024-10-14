@@ -6,26 +6,46 @@ import org.apache.logging.log4j.Logger;
 import utilities.enums.TextFormat;
 
 /**
- * <h1>{@code LoggerUtil}: A utility class for logging messages at various levels.</h1>
+ * <h1>Utility class for logging messages with different levels, using Log4j2.</h1>
  * <p>
- * This class provides methods for logging messages at different levels (debug, info, warn etc.)
- * using the Log4j2 framework. It includes message formatting with symbols for each log level and checks if the
- * specified logging level is enabled before logging.
+ * The {@code LoggerUtil} class provides logging functionality, supporting different log levels such as
+ * debug, info, warning, error, and fatal. It also includes a custom log level for success messages.
+ * The class uses Log4j2's {@code Logger} for structured logging, and integrates with the {@code ConsoleUtil}
+ * class to add formatting and symbols for different log types.
  * </p>
  *
- * <h2>Logging Levels Currently Supported:</h2>
+ * <h2>Key Features:</h2>
  * <ul>
- *   <li>DEBUG</li>
- *   <li>INFO</li>
- *   <li>WARN</li>
- *   <li>ERROR</li>
- *   <li>FATAL</li>
- *   <li>SUCCESS (custom level using INFO)</li>
+ *     <li>Supports standard log levels: debug, info, warning, error, and fatal.</li>
+ *     <li>Custom logging for success messages using the info log level.</li>
+ *     <li>Log messages include symbols and formatted text for enhanced readability.</li>
  * </ul>
  *
- * @see LogManager
- * @see Logger
- * @see Level
+ * <h2>Thread-Safety Considerations:</h2>
+ * <p>
+ * This class does not hold any state related to threading. Each instance is associated with a specific class
+ * for logging, and logging is handled by Log4j2, which ensures thread-safe behaviour.
+ * </p>
+ *
+ * <h2>Design Notes:</h2>
+ * <ul>
+ *     <li>Each {@code LoggerUtil} instance is tied to a specific class, simplifying log tagging.</li>
+ *     <li>Static methods are not used, as each instance is designed to log for a specific class.</li>
+ * </ul>
+ *
+ * <h2>Methods Provided:</h2>
+ * <ul>
+ *     <li>{@code debug(String)}: Logs a debug-level message if debug logging is enabled.</li>
+ *     <li>{@code info(String)}: Logs an info-level message if info logging is enabled.</li>
+ *     <li>{@code warn(String)}: Logs a warning-level message if warning logging is enabled.</li>
+ *     <li>{@code error(String)}: Logs an error-level message if error logging is enabled.</li>
+ *     <li>{@code fatal(String)}: Logs a fatal-level message if fatal logging is enabled.</li>
+ *     <li>{@code success(String)}: Logs a success message using the info log level.</li>
+ * </ul>
+ *
+ * @author Furkan O.
+ * @version 1.0
+ * @since 2024
  */
 public class LoggerUtil {
     /*
