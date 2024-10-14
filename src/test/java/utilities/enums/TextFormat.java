@@ -2,32 +2,43 @@ package utilities.enums;
 
 import utilities.ConsoleUtil;
 import utilities.LoggerUtil;
-
 /**
- * <h2>Enum representing various text formatting options for console outputs.</h2>
+ * <h1>Enum representing text formatting options and symbols for console output.</h1>
  * <p>
- * This enum provides flexibility in customising text styles, colours, and symbols for use across different
- * classes. It supports basic text formats like reset, colours, bold, underline, and background colours,
- * along with message-specific symbols (e.g., success, warning, error, informational, debug etc.).
- * </p>
- * <p>
- * The {@code ConsoleUtil.getTextFormat()} method can be used to retrieve these formats, allowing
- * different components of the application to easily apply consistent formatting. Additionally, the
- * {@code TextFormat} enum is compatible with stricter logging mechanisms, such as those implemented
- * in the {@code LoggerUtil} class, enabling a high degree of customisation for logs.
+ * The {@code TextFormat} enum defines various ANSI escape codes and symbols for formatting text in the console,
+ * including standard colours, bold and underlined styles, as well as background colours. This enum is used
+ * within the utility classes, such as {@code ConsoleUtil}, to format console messages with styles and symbols.
  * </p>
  *
- * <strong>Supported Formats:</strong>
+ * <h2>Formatting Options:</h2>
  * <ul>
- *     <li>Reset formatting</li>
- *     <li>Text colors (e.g., black, red, green, etc.)</li>
- *     <li>Bold and underlined text formats</li>
- *     <li>Background colors</li>
- *     <li>Symbols for different log types (success, warning, error, etc.)</li>
+ *     <li>Symbols: Success, warning, error, informational, debug, and fatal symbols for logging messages.</li>
+ *     <li>Text Colours: Standard text colours including black, red, green, yellow, blue, purple, cyan, white, and more.</li>
+ *     <li>Bold Text Colours: Bold versions of standard text colours for emphasis in console output.</li>
+ *     <li>Underlined Text Colours: Underlined versions of standard text colours for emphasis or decoration.</li>
+ *     <li>Background Colours: Background colour options to highlight or differentiate text in console output.</li>
  * </ul>
  *
- * @see ConsoleUtil#getTextFormat(TextFormat)
+ * <h2>Usage Example:</h2>
+ * <pre>
+ *     String successMessage =
+ *          ConsoleUtil.getTextFormat(TextFormat.SUCCESS_MESSAGE_SYMBOL)
+ *          + "Operation completed successfully!"
+ *          + ConsoleUtil.getTextFormat(TextFormat.RESET);
+ *     System.out.println(successMessage);
+ * </pre>
+ *
+ * <h2>Integration:</h2>
+ * <ul>
+ *     <li>This enum integrates with {@code ConsoleUtil} for formatting and displaying styled console messages.</li>
+ *     <li>It also works in conjunction with {@code LoggerUtil} for enhanced log messages with symbols and colours.</li>
+ * </ul>
+ *
+ * @see ConsoleUtil
  * @see LoggerUtil
+ * @since 2024
+ * @author Furkan O.
+ * @version 1.0
  */
 public enum TextFormat {
     RESET,
