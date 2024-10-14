@@ -12,7 +12,46 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ThreadGuard;
 import utilities.enums.BrowserType;
 import utilities.enums.TextFormat;
-
+/**
+ * <h1>Utility class for managing WebDriver instances in a thread-safe manner.</h1>
+ * <p>
+ * The {@code DriverUtil} class provides static methods to handle the lifecycle of WebDriver instances,
+ * including their initialisation, retrieval, and termination. It ensures that each thread has its own
+ * WebDriver instance using {@code ThreadLocal}, making it suitable for parallel test execution environments.
+ * </p>
+ *
+ * <h2>Key Features:</h2>
+ * <ul>
+ *     <li>Thread-safe WebDriver management using {@code ThreadLocal}.</li>
+ *     <li>Support for multiple browsers, including Chrome, Firefox, Edge, Safari, and Internet Explorer.</li>
+ *     <li>Headless mode support for browsers that allow headless execution.</li>
+ *     <li>Methods for initialising, retrieving, and quitting WebDriver instances.</li>
+ * </ul>
+ *
+ * <h2>Thread-Safety Considerations:</h2>
+ * <p>
+ * The WebDriver instance is stored in a {@code ThreadLocal} variable to ensure that each thread
+ * has its own instance, preventing conflicts in parallel execution environments. The class also
+ * uses {@code ThreadGuard} to further protect the WebDriver instances.
+ * </p>
+ *
+ * <h2>Design Notes:</h2>
+ * <ul>
+ *     <li>This class follows the singleton pattern by preventing instantiation via a private constructor.</li>
+ *     <li>Static methods handle the WebDriver lifecycle, including initialisation and termination.</li>
+ * </ul>
+ *
+ * <h2>Methods Provided:</h2>
+ * <ul>
+ *     <li>{@code setDriverInstance(BrowserType)}: Initialises the WebDriver instance for a specific browser type.</li>
+ *     <li>{@code getDriverInstance()}: Retrieves the WebDriver instance associated with the current thread.</li>
+ *     <li>{@code quitDriver()}: Quits the WebDriver instance and removes it from the {@code ThreadLocal} storage.</li>
+ * </ul>
+ *
+ * @author Furkan O.
+ * @version 1.0
+ * @since 2024
+ */
 public class DriverUtil {
 
     /*
