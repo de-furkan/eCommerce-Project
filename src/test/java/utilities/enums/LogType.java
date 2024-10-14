@@ -1,21 +1,34 @@
 package utilities.enums;
 
 import utilities.LoggerUtil;
-
 /**
- * <h2>Enum representing simple log types used for basic console logging.</h2>
+ * <h1>Enum representing different types of log levels used in the application.</h1>
  * <p>
- * This enum provides four log types:
+ * The {@code LogType} enum defines the log levels available for categorising log messages
+ * when using the logging framework. Each log type corresponds to a different level of severity or purpose,
+ * which can be used in conjunction with logging utilities such as {@code LoggerUtil}.
+ * </p>
+ *
+ * <h2>Log Levels:</h2>
  * <ul>
- *     <li>{@code SUCCESS} - Represents successful operations.</li>
- *     <li>{@code WARNING} - Represents warnings or potential issues.</li>
- *     <li>{@code ERROR} - Represents error messages.</li>
- *     <li>{@code INFO} - Represents informational messages.</li>
+ *     <li><strong>SUCCESS:</strong> Represents success messages, typically used for positive outcomes or completion of tasks.</li>
+ *     <li><strong>WARNING:</strong> Represents warning messages, indicating potential issues or areas that require attention.</li>
+ *     <li><strong>ERROR:</strong> Represents error messages, typically used for failures or critical issues in the system.</li>
+ *     <li><strong>INFO:</strong> Represents informational messages, used for general logging of actions or states.</li>
  * </ul>
- * <strong>Note:</strong> This enum is intended for simple logs only. For more complex logging
- * needs, such as debugging or reporting, refer to the {@code LoggerUtil} class.
+ *
+ * <h2>Usage Example:</h2>
+ * <pre>
+ *     LoggerUtil logger = new LoggerUtil(MyClass.class);
+ *     logger.debug(
+ *          ConsoleUtil.getTextFormat(TextFormat.SUCCESS) + " " + "A success message"
+ *     );
+ * </pre>
  *
  * @see LoggerUtil
+ * @since 2024
+ * @author Furkan O.
+ * @version 1.0
  */
 public enum LogType {
     SUCCESS,
