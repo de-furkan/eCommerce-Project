@@ -10,7 +10,7 @@
     <Appenders>
         <!-- File Appender
              - Writes log entries to a file called eCommerce-Project.log
-             - Once the file size exceeds 500kb, it will create a new log file with a timestamp.
+             - Once the file size exceeds 10MB, it will create a new log file with a timestamp.
         -->
         <RollingFile name="file"
                      fileName="${basePath}/eCommerce-Project.log"
@@ -19,7 +19,7 @@
                 <pattern>%d{HH:mm:ss.SSS} [%t] %-5level %c{1.} [%t] %msg%n</pattern>
             </PatternLayout>
             <Policies>
-                <SizeBasedTriggeringPolicy size="500" />
+                <SizeBasedTriggeringPolicy size="10000" />
             </Policies>
         </RollingFile>
 
