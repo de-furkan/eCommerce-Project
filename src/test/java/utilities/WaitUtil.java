@@ -369,6 +369,78 @@ public class WaitUtil {
         return null;
     }
     /**
+     * <h2>{@code waitForClickableElement(...)}: Waits for the specified WebElement to become clickable within a given timeout period.</h2>
+     * <p>
+     * This method applies an explicit wait to check if the given WebElement is clickable within the specified timeout.
+     * If the element is not clickable within the timeout duration, or if the WebDriver instance is unavailable,
+     * an appropriate exception is caught and logged.
+     * </p>
+     *
+     * <h2>Usage:</h2>
+     * <p>
+     * This method should be used when you need to ensure that an element is clickable before interacting with it.
+     * It is useful for elements that may be dynamically loaded or become interactable only after certain conditions
+     * are met.
+     * </p>
+     *
+     * <pre><code>
+     *     WebElement el = WaitUtil.waitForClickableElement(
+     *                 driver.findElement(By.xpath("//div[@id='finish']")), // locate element by xpath.
+     *                 10 // timeout after 10 seconds.
+     *         );
+     * </code></pre>
+     *
+     * <h2>Exception Handling:</h2>
+     * <ul>
+     *     <li>If the WebDriver instance is null, an error is logged and the method returns {@code null}.</li>
+     *     <li>If the element does not become clickable within the timeout, a {@code TimeoutException} is caught and logged.</li>
+     *     <li>If the element cannot be located, a {@code NoSuchElementException} is caught and logged.</li>
+     *     <li>If the element is not interactable, an {@code ElementNotInteractableException} is caught and logged.</li>
+     *     <li>If a WebDriver-related error occurs, a {@code WebDriverException} is logged.</li>
+     *     <li>If an invalid argument is provided, an {@code IllegalArgumentException} is logged.</li>
+     *     <li>Other exceptions are caught and logged as unexpected errors.</li>
+     * </ul>
+     *
+     * @param element the WebElement to wait for to become clickable
+     * @param timeout the maximum time (in seconds) to wait for the element to become clickable
+     * @return the clickable WebElement, or {@code null} if the element is not clickable within the timeout
+     * @see WebDriverWait
+     * @see ExpectedConditions
+     */
+    public static WebElement waitForClickableElement(WebElement element, int timeout) {
+        if (DriverUtil.getDriverInstance() == null) {
+            LOGGER.error("Driver instance is null");
+            return null;
+        }
+        try {
+            WebDriverWait wait = new WebDriverWait(DriverUtil.getDriverInstance(), Duration.ofSeconds(timeout));
+            return wait.until(ExpectedConditions.elementToBeClickable(element));
+        } catch (TimeoutException e) {
+            LOGGER.error(
+                    "Timeout waiting for the element to become clickable:"
+                            + " " + element + " " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            LOGGER.error(
+                    "Element could not be found:"
+                            + " " + element + e.getMessage());
+        } catch (ElementNotInteractableException e) {
+            LOGGER.error(
+                    "Element is not interactable:"
+                            + " "
+                            + element
+                            + e.getMessage());
+        } catch (WebDriverException e) {
+            LOGGER.error("WebDriver error occurred: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(
+                    "Invalid argument provided:"
+                            + " " + element + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred: " + e.getMessage());
+        }
+        return null;
+    }
+    /**
      * <h2>{@code getDefaultImplicitWaitTime()}: Retrieves the default implicit wait time for WebDriver operations.</h2>
      * <p>
      * This method returns the pre-configured duration of the implicit wait time used by the WebDriver.
