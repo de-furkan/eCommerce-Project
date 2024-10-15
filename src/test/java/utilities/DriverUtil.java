@@ -188,7 +188,8 @@ public class DriverUtil {
      * <p>
      * If the browser type is invalid or unrecognised, a {@code RuntimeException} is thrown
      * with a descriptive message. The method also maximises the browser window after
-     * initialisation.
+     * initialisation. This method also sets the implicit wait time for WebDrivers
+     * defined by the WaitUtil class.
      * </p>
      *
      * <p>
@@ -198,6 +199,7 @@ public class DriverUtil {
      * @param browser the browser type for which the WebDriver is initialised (e.g., CHROME, FIREFOX, EDGE, etc.).
      * @throws RuntimeException if an unsupported or unrecognised browser type is provided.
      * @see BrowserType
+     * @see WaitUtil#getDefaultImplicitWaitTime()
      */
     private static void initDriver(BrowserType browser) {
         String successMessage =
@@ -261,6 +263,15 @@ public class DriverUtil {
 
         // maximise the browser window
         DRIVER.get().manage().window().maximize();
+
+        /*
+            Sets the WebDriver implicit wait time.
+            Implicit waits are often used to handle situations where elements may not be
+            immediately present in the DOM -
+            allowing the WebDriver to wait for a specified time
+            before throwing an exception.
+         */
+        DRIVER.get().manage().timeouts().implicitlyWait(WaitUtil.getDefaultImplicitWaitTime());
     }
     /*
      *****************************************
