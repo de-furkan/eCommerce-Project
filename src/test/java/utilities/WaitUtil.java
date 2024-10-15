@@ -301,6 +301,74 @@ public class WaitUtil {
         return null;
     }
     /**
+     * <h2>{@code waitForVisibility(...)}: Waits for the WebElement, identified by the specified locator, to become visible within a given timeout period.</h2>
+     * <p>
+     * This method applies an explicit wait to locate the WebElement using the provided {@code By} locator,
+     * waiting until the element becomes visible or the specified timeout is reached. If the element
+     * does not become visible within the timeout period, an appropriate exception is caught and logged.
+     * </p>
+     *
+     * <h2>Usage:</h2>
+     * <p>
+     * This method is ideal for ensuring that elements, which may be dynamically loaded or take time to render,
+     * are visible before interacting with them. It should be used when the visibility of an element is necessary
+     * to proceed with further operations.
+     * </p>
+     *
+     * <pre><code>
+     *     WebElement el = WaitUtil.fluentWait(
+     *                 By.xpath("//div[@id='finish']"), // find By xpath locator
+     *                 15, // timeout after 15 seconds.
+     *                 1 // poll every 1 second.
+     *         );
+     * </code></pre>
+     *
+     * <h2>Exception Handling:</h2>
+     * <ul>
+     *     <li>If the WebDriver instance is null, an error is logged and the method returns {@code null}.</li>
+     *     <li>If the element is not visible within the specified timeout, a {@code TimeoutException} is caught and logged.</li>
+     *     <li>If the element cannot be found using the specified locator, a {@code NoSuchElementException} is caught and logged.</li>
+     *     <li>If a WebDriver-related error occurs, a {@code WebDriverException} is logged.</li>
+     *     <li>If an invalid argument is provided, an {@code IllegalArgumentException} is logged.</li>
+     *     <li>Other exceptions are caught and logged as unexpected errors.</li>
+     * </ul>
+     *
+     * @param locator the {@code By} locator used to find the WebElement
+     * @param timeout the maximum time (in seconds) to wait for the element to become visible
+     * @return the visible WebElement, or {@code null} if the element is not visible within the timeout
+     * @see WebDriverWait
+     * @see ExpectedConditions
+     */
+    public static WebElement waitForVisibility(By locator, int timeout) {
+        if (DriverUtil.getDriverInstance() == null) {
+            LOGGER.error("Driver instance is null");
+            return null;
+        }
+        try {
+            WebDriverWait wait = new WebDriverWait(DriverUtil.getDriverInstance(), Duration.ofSeconds(timeout));
+            LOGGER.success(
+                    "Successfully located and returned WebElement:" +
+                            " " + locator
+            );
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        } catch (TimeoutException e) {
+            LOGGER.error(
+                    "Timeout waiting for the element to appear:" +
+                            " " + locator + " " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            LOGGER.error(
+                    "Element could not be located:" +
+                            " " + locator + " " + e.getMessage());
+        } catch (WebDriverException e) {
+            LOGGER.error("WebDriver error occurred:" + " " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Invalid argument provided:" + " " + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred:" + " " + e.getMessage());
+        }
+        return null;
+    }
+    /**
      * <h2>{@code getDefaultImplicitWaitTime()}: Retrieves the default implicit wait time for WebDriver operations.</h2>
      * <p>
      * This method returns the pre-configured duration of the implicit wait time used by the WebDriver.
