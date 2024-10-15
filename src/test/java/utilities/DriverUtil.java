@@ -61,6 +61,7 @@ public class DriverUtil {
      */
     // Thread-safety for driver instance, useful for parallel testing modes.
     private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
+    private static final LoggerUtil LOGGER = new LoggerUtil(DriverUtil.class);
 
     /*
      *****************************************
@@ -148,11 +149,7 @@ public class DriverUtil {
             if (DRIVER.get() != null) {
                 DRIVER.get().quit();
                 DRIVER.remove();
-                System.out.println(
-                        ConsoleUtil.getTextFormat(TextFormat.SUCCESS_MESSAGE_SYMBOL)
-                        + browserName
-                        + " driver successfully quit."
-                );
+                LOGGER.success(browserName + " " + "driver successfully quit.");
                 return;
             }
             throw new NoSuchMethodException();
@@ -202,9 +199,6 @@ public class DriverUtil {
      * @see WaitUtil#getDefaultImplicitWaitTime()
      */
     private static void initDriver(BrowserType browser) {
-        String successMessage =
-                ConsoleUtil.getTextFormat(TextFormat.SUCCESS_MESSAGE_SYMBOL)
-                + browser + " " + "driver successfully initialised.";
         String headless = "--headless";
         String defaultMessage =
                 ConsoleUtil.getTextFormat(TextFormat.WARNING_MESSAGE_SYMBOL)
@@ -259,7 +253,7 @@ public class DriverUtil {
             default:
                 throw new RuntimeException(defaultMessage);
         }
-        System.out.println(successMessage);
+        LOGGER.success(browser + " " + "driver successfully initialised.");
 
         // maximise the browser window
         DRIVER.get().manage().window().maximize();
