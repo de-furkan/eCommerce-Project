@@ -414,6 +414,7 @@ public class WaitUtil {
         }
         try {
             WebDriverWait wait = new WebDriverWait(DriverUtil.getDriverInstance(), Duration.ofSeconds(timeout));
+            LOGGER.success("Successfully located and returned WebElement:" + " " + element);
             return wait.until(ExpectedConditions.elementToBeClickable(element));
         } catch (TimeoutException e) {
             LOGGER.error(
@@ -435,6 +436,79 @@ public class WaitUtil {
             LOGGER.error(
                     "Invalid argument provided:"
                             + " " + element + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred: " + e.getMessage());
+        }
+        return null;
+    }
+    /**
+     * <h2>{@code waitForClickableElement(...)}: Waits for the WebElement, identified by the specified locator, to become clickable within a given timeout period.</h2>
+     * <p>
+     * This method applies an explicit wait to check if the WebElement, located using the provided {@code By} locator,
+     * becomes clickable within the specified timeout. If the element is not clickable within the timeout duration,
+     * or if the WebDriver instance is unavailable, an appropriate exception is caught and logged.
+     * </p>
+     *
+     * <h2>Usage:</h2>
+     * <p>
+     * This method should be used to ensure that elements, identified by locators, are clickable before interacting
+     * with them. It is useful for handling scenarios where the element may not be immediately interactable due to
+     * dynamic content or page loading.
+     * </p>
+     *
+     * <pre><code>
+     *     WebElement el = WaitUtil.waitForClickableElement(
+     *                 By.xpath("//adiv[@id='finish']"),
+     *                 10
+     *         );
+     * </code></pre>
+     *
+     * <h2>Exception Handling:</h2>
+     * <ul>
+     *     <li>If the WebDriver instance is null, an error is logged and the method returns {@code null}.</li>
+     *     <li>If the element does not become clickable within the timeout, a {@code TimeoutException} is caught and logged.</li>
+     *     <li>If the element cannot be located using the {@code By} locator, a {@code NoSuchElementException} is caught and logged.</li>
+     *     <li>If the element is not interactable, an {@code ElementNotInteractableException} is caught and logged.</li>
+     *     <li>If a WebDriver-related error occurs, a {@code WebDriverException} is logged.</li>
+     *     <li>If an invalid argument is provided, an {@code IllegalArgumentException} is logged.</li>
+     *     <li>Other exceptions are caught and logged as unexpected errors.</li>
+     * </ul>
+     *
+     * @param locator the {@code By} locator used to find the WebElement
+     * @param timeout the maximum time (in seconds) to wait for the element to become clickable
+     * @return the clickable WebElement, or {@code null} if the element is not clickable within the timeout
+     * @see WebDriverWait
+     * @see ExpectedConditions
+     */
+    public static WebElement waitForClickableElement(By locator, int timeout) {
+        if (DriverUtil.getDriverInstance() == null) {
+            LOGGER.error("Driver instance is null");
+            return null;
+        }
+        try {
+            WebDriverWait wait = new WebDriverWait(DriverUtil.getDriverInstance(), Duration.ofSeconds(timeout));
+            LOGGER.success("Successfully located and returned WebElement:" + " " + locator);
+            return wait.until(ExpectedConditions.elementToBeClickable(locator));
+        } catch (TimeoutException e) {
+            LOGGER.error(
+                    "Timeout waiting for the element to become clickable:"
+                            + " " + locator + " " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            LOGGER.error(
+                    "Element could not be found:"
+                            + " " + locator + e.getMessage());
+        } catch (ElementNotInteractableException e) {
+            LOGGER.error(
+                    "Element is not interactable:"
+                            + " "
+                            + locator
+                            + e.getMessage());
+        } catch (WebDriverException e) {
+            LOGGER.error("WebDriver error occurred: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(
+                    "Invalid argument provided:"
+                            + " " + locator + e.getMessage());
         } catch (Exception e) {
             LOGGER.error("An unexpected error occurred: " + e.getMessage());
         }
