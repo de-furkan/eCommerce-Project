@@ -97,6 +97,7 @@ public class WaitUtil {
         try {
             Duration duration = Duration.ofSeconds(seconds);
             Thread.sleep(duration.toMillis());
+            LOGGER.success("Successfully paused thread for" + " " + seconds + " " + "second(s).");
         } catch (InterruptedException e) {
             LOGGER.error(
                     "Thread interrupted during hardWaitForSeconds. Waiting for"
@@ -154,7 +155,7 @@ public class WaitUtil {
             if (DriverUtil.getDriverInstance() == null) {
                 LOGGER.error("Driver instance is null");
             }
-            LOGGER.error("Page load timed out after " + secondsToTimeout + " seconds.");
+            LOGGER.error("Page load timed out after " + secondsToTimeout + " " + "seconds.");
         }
     }
     /**
@@ -172,6 +173,14 @@ public class WaitUtil {
      * It is preferable to hard waits, as it continually polls the DOM instead of waiting for a fixed amount of time.
      * This method is particularly useful for handling dynamic web content where elements might load asynchronously.
      * </p>
+     *
+     * <pre><code>
+     *     WebElement startBtn = WaitUtil.fluentWait(
+     *                 By.xpath("//div[@id='start']/button"),
+     *                 10,
+     *                 1
+     *         );
+     * </code></pre>
      *
      * <h2>Exception Handling:</h2>
      * <ul>
@@ -205,9 +214,11 @@ public class WaitUtil {
                     ).ignoring(NoSuchElementException.class);
 
             element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-            LOGGER.success("Element successfully located and returned");
+            LOGGER.success("Successfully located and returned WebElement:" + " " + locator );
         } catch (TimeoutException e) {
-            LOGGER.error("Timeout waiting for the element to appear:" + " " + e.getMessage());
+            LOGGER.error(
+                    "Timeout waiting for the element to appear:"
+                            + " " + locator + " " + e.getMessage());
         } catch (WebDriverException e) {
             LOGGER.fatal("WebDriver exception occurred:" + " " + e.getMessage());
         } catch (Exception e) {
@@ -215,10 +226,79 @@ public class WaitUtil {
         }
 
         if (element == null) {
-            LOGGER.error("Couldn't locate element by locator:" + " " + locator);
+            LOGGER.error(
+                    "Couldn't locate element by locator:"
+                            + " " + locator);
             return null;
         }
         return element;
+    }
+    /**
+     * <h2>{@code waitForVisibility(...)}: Waits for the specified WebElement to become visible within a given timeout period.</h2>
+     * <p>
+     * This method applies an explicit wait to check for the visibility of the given WebElement.
+     * It waits until the element becomes visible or until the specified timeout duration elapses.
+     * If the element does not become visible in the specified time, or if the WebDriver is unavailable,
+     * an appropriate error is logged.
+     * </p>
+     *
+     * <h2>Usage:</h2>
+     * <p>
+     * Use this method when you need to ensure that an element is visible on the page before interacting with it.
+     * Explicit waits are preferred for synchronisation in dynamic web pages where elements might take time
+     * to appear.
+     * </p>
+     *
+     * <pre><code>
+     *     WebElement startBtn = WaitUtil.waitForVisibility(
+     *                 driver.findElement(By.xpath("//div[@id='start']/button")),
+     *                 10 // timeout after 10 seconds.
+     *         );
+     * </code></pre>
+     *
+     * <h2>Exception Handling:</h2>
+     * <ul>
+     *     <li>If the WebDriver instance is null, an error is logged and the method returns {@code null}.</li>
+     *     <li>If the element is not visible within the specified timeout, a {@code TimeoutException} is caught and logged.</li>
+     *     <li>If the element cannot be found, a {@code NoSuchElementException} is caught and logged.</li>
+     *     <li>If a WebDriver-related error occurs, a {@code WebDriverException} is logged.</li>
+     *     <li>Other exceptions, including invalid arguments, are caught and logged as unexpected errors.</li>
+     * </ul>
+     *
+     * @param element the WebElement to wait for visibility.
+     * @param timeout the maximum time to wait for the element to become visible, in seconds.
+     * @return the visible WebElement, or {@code null} if the element is not visible within the timeout.
+     * @see WebDriverWait
+     * @see ExpectedConditions
+     */
+    public static WebElement waitForVisibility(WebElement element, int timeout) {
+        if (DriverUtil.getDriverInstance() == null) {
+            LOGGER.error("Driver instance is null");
+            return null;
+        }
+        try {
+            WebDriverWait wait = new WebDriverWait(DriverUtil.getDriverInstance(), Duration.ofSeconds(timeout));
+            LOGGER.success(
+                    "Successfully located and returned WebElement:" +
+                            " " + element
+            );
+            return wait.until(ExpectedConditions.visibilityOf(element));
+        } catch (TimeoutException e) {
+            LOGGER.error(
+                    "Timeout waiting for the element to appear:" +
+                            " " + element + " " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            LOGGER.error(
+                    "Element could not be located:" +
+                            " " + element + " " + e.getMessage());
+        } catch (WebDriverException e) {
+            LOGGER.error("WebDriver error occurred:" + " " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Invalid argument provided:" + " " + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred:" + " " + e.getMessage());
+        }
+        return null;
     }
     /**
      * <h2>{@code getDefaultImplicitWaitTime()}: Retrieves the default implicit wait time for WebDriver operations.</h2>
@@ -241,6 +321,7 @@ public class WaitUtil {
      * @return the default duration for implicit waits, defined by {@code DEFAULT_IMPLICIT_WAIT_TIME}.
      */
     public static Duration getDefaultImplicitWaitTime() {
+        LOGGER.info("Default implicit wait time set to:" + " " + DEFAULT_IMPLICIT_WAIT_TIME + " " + "seconds.");
         return DEFAULT_IMPLICIT_WAIT_TIME;
     }
     /*
