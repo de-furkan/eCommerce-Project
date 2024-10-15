@@ -1,9 +1,14 @@
 package utilities;
 
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.enums.TextFormat;
+
 import java.time.Duration;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class WaitUtil {
@@ -101,29 +106,6 @@ public class WaitUtil {
         }
     }
     /**
-     * <h2>{@code getDefaultImplicitWaitTime()}: Retrieves the default implicit wait time for WebDriver operations.</h2>
-     * <p>
-     * This method returns the pre-configured duration of the implicit wait time used by the WebDriver.
-     * Implicit waits instruct the WebDriver to poll the DOM for a specified duration when attempting
-     * to locate elements, ensuring that the test waits for the element to be present before throwing an exception.
-     * </p>
-     *
-     * <h2>Usage:</h2>
-     * <p>
-     * Implicit waits are typically used when synchronisation between WebDriver and the web application is needed.
-     * It ensures that WebDriver will wait for elements to appear before interacting with them. However, it's
-     * important to note that explicit waits are often preferred in complex scenarios.
-     * </p>
-     *
-     * <pre><code>
-     *     driver.get.manage().timeouts().implicitlyWait(WaitUtil.getDefaultImplicitWaitTime());
-     * </code></pre>
-     * @return the default duration for implicit waits, defined by {@code DEFAULT_IMPLICIT_WAIT_TIME}.
-     */
-    public static Duration getDefaultImplicitWaitTime() {
-        return DEFAULT_IMPLICIT_WAIT_TIME;
-    }
-    /**
      * <h2>{@code waitForFullPageLoad(...)}: Waits for the web page to fully load by checking the document's ready state.</h2>
      * <p>
      * This method waits until the web page has completely loaded by polling the document's ready state
@@ -174,6 +156,92 @@ public class WaitUtil {
             }
             LOGGER.error("Page load timed out after " + secondsToTimeout + " seconds.");
         }
+    }
+    /**
+     * <h2>{@code fluentWait(...)}: Waits for a WebElement to become visible using a fluent wait strategy.</h2>
+     * <p>
+     * This method applies a fluent wait to the specified element, allowing for a customised timeout duration
+     * and polling interval. The fluent wait continually checks for the element's visibility within the specified
+     * timeout and retries at the defined polling intervals. If the element does not appear within the timeout,
+     * a timeout exception is thrown and logged.
+     * </p>
+     *
+     * <h2>Usage:</h2>
+     * <p>
+     * Fluent waits are useful when waiting for elements that may appear dynamically after some time.
+     * It is preferable to hard waits, as it continually polls the DOM instead of waiting for a fixed amount of time.
+     * This method is particularly useful for handling dynamic web content where elements might load asynchronously.
+     * </p>
+     *
+     * <h2>Exception Handling:</h2>
+     * <ul>
+     *     <li>If the WebDriver instance is null, an error is logged and the method returns {@code null}.</li>
+     *     <li>If the element does not become visible within the timeout, a {@code TimeoutException} is caught and logged.</li>
+     *     <li>If a WebDriver-related exception occurs, a fatal log is generated.</li>
+     *     <li>Any other exceptions are caught and logged as unexpected errors.</li>
+     * </ul>
+     *
+     * @param locator the {@code By} locator used to find the WebElement
+     * @param timeoutInSeconds the maximum time to wait for the element to appear
+     * @param pollEverySecond the polling interval (in seconds) between checks for the element
+     * @return the visible WebElement, or {@code null} if the element is not found within the timeout
+     * @see FluentWait
+     * @see ExpectedConditions
+     */
+    public static WebElement fluentWait(By locator, int timeoutInSeconds, int pollEverySecond) {
+        WebElement element = null;
+        if (DriverUtil.getDriverInstance() == null) {
+            LOGGER.error("Driver instance is null");
+            return null;
+        }
+        try {
+            FluentWait<WebDriver> wait = new FluentWait<>(DriverUtil.getDriverInstance())
+                    .withTimeout(Duration.ofSeconds(timeoutInSeconds))
+                    .pollingEvery(Duration.ofSeconds(pollEverySecond))
+                    .withMessage(
+                            ConsoleUtil.getTextFormat(TextFormat.INFORMATIONAL_MESSAGE_SYMBOL)
+                            + " "
+                            + "Waiting for element to appear..."
+                    ).ignoring(NoSuchElementException.class);
+
+            element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            LOGGER.success("Element successfully located and returned");
+        } catch (TimeoutException e) {
+            LOGGER.error("Timeout waiting for the element to appear:" + " " + e.getMessage());
+        } catch (WebDriverException e) {
+            LOGGER.fatal("WebDriver exception occurred:" + " " + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An unexpected exception occurred:" + " " + e.getMessage());
+        }
+
+        if (element == null) {
+            LOGGER.error("Couldn't locate element by locator:" + " " + locator);
+            return null;
+        }
+        return element;
+    }
+    /**
+     * <h2>{@code getDefaultImplicitWaitTime()}: Retrieves the default implicit wait time for WebDriver operations.</h2>
+     * <p>
+     * This method returns the pre-configured duration of the implicit wait time used by the WebDriver.
+     * Implicit waits instruct the WebDriver to poll the DOM for a specified duration when attempting
+     * to locate elements, ensuring that the test waits for the element to be present before throwing an exception.
+     * </p>
+     *
+     * <h2>Usage:</h2>
+     * <p>
+     * Implicit waits are typically used when synchronisation between WebDriver and the web application is needed.
+     * It ensures that WebDriver will wait for elements to appear before interacting with them. However, it's
+     * important to note that explicit waits are often preferred in complex scenarios.
+     * </p>
+     *
+     * <pre><code>
+     *     driver.get.manage().timeouts().implicitlyWait(WaitUtil.getDefaultImplicitWaitTime());
+     * </code></pre>
+     * @return the default duration for implicit waits, defined by {@code DEFAULT_IMPLICIT_WAIT_TIME}.
+     */
+    public static Duration getDefaultImplicitWaitTime() {
+        return DEFAULT_IMPLICIT_WAIT_TIME;
     }
     /*
      *****************************************
