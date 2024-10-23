@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <!-- The basePath
+             - Defines where the log files will be stored.
+        -->
+        <Property name="basePath">target/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- File Appender
+             - Writes log entries to a file called eCommerce-Project.log
+             - Once the file size exceeds 10MB, it will create a new log file with a timestamp.
+        -->
+        <RollingFile name="file"
+                     fileName="${basePath}/eCommerce-Project.log"
+                     filePattern="${basePath}/eCommerce-Project-%d{HH:mm:ss.SSS}.log">
+            <PatternLayout>
+                <pattern>%d{HH:mm:ss.SSS} [%t] %-5level %c{1.} [%t] %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10000" />
+            </Policies>
+        </RollingFile>
+
+        <!-- Console Appender
+             - The console appender below is responsible for outputting the logs to the console.
+        -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %36logger{36} - %msg%n" />
+        </Console>
+    </Appenders>
+
+    <!-- Loggers -->
+    <Loggers>
+        <!-- Custom logger for the package
+             - Define what parts of your project you want to log.
+             - Outputs logs to both the console and log file.
+             - Add more <Logger> if you need to support other parts of the project with Log4J.
+        -->
+        <Logger name="utilities" level="trace" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        <Logger name="pages" level="trace" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        <!-- Root Logger -->
+        <Root level="fatal">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>
