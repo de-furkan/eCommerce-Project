@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.enums.TextFormat;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -489,6 +490,69 @@ public class WaitUtil {
             WebDriverWait wait = new WebDriverWait(DriverUtil.getDriverInstance(), Duration.ofSeconds(timeout));
             LOGGER.success("Successfully located and returned WebElement:" + " " + locator);
             return wait.until(ExpectedConditions.elementToBeClickable(locator));
+        } catch (TimeoutException e) {
+            LOGGER.error(
+                    "Timeout waiting for the element to become clickable:"
+                            + " " + locator + " " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            LOGGER.error(
+                    "Element could not be found:"
+                            + " " + locator + e.getMessage());
+        } catch (ElementNotInteractableException e) {
+            LOGGER.error(
+                    "Element is not interactable:"
+                            + " "
+                            + locator
+                            + e.getMessage());
+        } catch (WebDriverException e) {
+            LOGGER.error("WebDriver error occurred: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(
+                    "Invalid argument provided:"
+                            + " " + locator + e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred: " + e.getMessage());
+        }
+        return null;
+    }
+    /**
+     * <h2>{@code getListOfClickableElements(...)}: Retrieves a list of web elements located by the given {@link By} locator,
+     * waiting for each element to become clickable within the specified timeout period. </h2>
+     *
+     * <p>If successful, all elements are returned in a list. Logs a success message upon successfully locating the elements and verifying their clickability. In case of errors
+     * or exceptions during the process, appropriate log messages are generated and the method returns {@code null}.</p>
+     *
+     * @param locator  The {@link By} locator used to identify the web elements.
+     * @param timeout  The maximum time (in seconds) to wait for each element to become clickable.
+     * @return         A list of {@link WebElement} objects that are clickable, or {@code null} if an error occurs or if no
+     *                 elements are found.
+     *
+     * @throws TimeoutException               If any element does not become clickable within the specified timeout period.
+     * @throws NoSuchElementException         If no elements matching the provided locator can be found in the DOM.
+     * @throws ElementNotInteractableException If an element is found but is not interactable.
+     * @throws WebDriverException             If a WebDriver-related error occurs during the operation.
+     * @throws IllegalArgumentException       If an invalid locator is provided.
+     * @throws Exception                      If any other unexpected error occurs.
+     *
+     * <p>This method logs:</p>
+     * <ul>
+     *     <li>Success when all elements are located and determined to be clickable.</li>
+     *     <li>Error if the driver instance is null, or if any of the aforementioned exceptions occur.</li>
+     * </ul>
+     */
+    public static List<WebElement> getListOfClickableElements(By locator, int timeout) {
+        if (DriverUtil.getDriverInstance() == null) {
+            LOGGER.error("Driver instance is null");
+            return null;
+        }
+        try {
+            WebDriverWait wait = new WebDriverWait(DriverUtil.getDriverInstance(), Duration.ofSeconds(timeout));
+            List<WebElement> listOfElements = DriverUtil.getDriverInstance().findElements(locator);
+            LOGGER.success("Successfully located all elements and placed into a list:" + " " + listOfElements);
+            for (WebElement element : listOfElements) {
+                wait.until(ExpectedConditions.elementToBeClickable(element));
+            }
+            return listOfElements;
         } catch (TimeoutException e) {
             LOGGER.error(
                     "Timeout waiting for the element to become clickable:"
