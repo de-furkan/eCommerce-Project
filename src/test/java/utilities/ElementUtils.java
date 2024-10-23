@@ -2,6 +2,8 @@ package utilities;
 
 import org.openqa.selenium.*;
 
+import java.util.List;
+
 public class ElementUtils {
     /*
      *****************************************
@@ -114,6 +116,37 @@ public class ElementUtils {
         if (visibleElement != null) {
             visibleElement.sendKeys(sendKeys);
             LOGGER.success("Successfully sent the text" + " " + sendKeys + " " + "to the given element:" + " " + element);
+        }
+    }
+    /**
+     * <h2>{@code clickByIndex(...)}: Clicks on a web element located by its index within a list of elements found by the provided {@link By} locator.</h2>
+     * <p>The method waits for the elements to become clickable within the specified timeout period, then clicks the element
+     * at the given index.</p>
+     *
+     * <p>If the list of elements is not empty and the index is valid, the method clicks the specified element and logs
+     * a success message. If the list is empty or {@code null}, no action is taken.</p>
+     *
+     * @param elements      The {@link By} locator used to identify the list of web elements.
+     * @param timeout       The maximum amount of time (in seconds) to wait for the elements to become clickable.
+     * @param elementIndex  The index of the element to be clicked within the list of located elements.
+     *<br/><br/>
+     * <p>This method assumes that any exceptions related to visibility, timeouts, or interaction with the elements are
+     * handled by {@link WaitUtil#getListOfClickableElements(By, int)}.</p>
+     *
+     * <p>This method logs:</p>
+     * <ul>
+     *     <li>Success when the element at the specified index is successfully clicked.</li>
+     *     <li>Error if no elements are found or if the list of elements is {@code null}.</li>
+     * </ul>
+     *
+     * @throws IndexOutOfBoundsException If the provided index is out of bounds for the list of elements.
+     */
+
+    public static void clickByIndex(By elements, int timeout, int elementIndex) {
+        List<WebElement> listOfElements = WaitUtil.getListOfClickableElements(elements, timeout);
+        if (!listOfElements.isEmpty() && listOfElements != null) {
+            listOfElements.get(elementIndex).click();
+            LOGGER.success("Successfully clicked on element index" + " " + elementIndex + " " + listOfElements.get(elementIndex));
         }
     }
     /*
