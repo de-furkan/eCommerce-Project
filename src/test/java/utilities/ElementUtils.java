@@ -2,6 +2,7 @@ package utilities;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 
 import java.util.List;
 import java.util.Objects;
@@ -174,12 +175,32 @@ public class ElementUtils {
      * @throws NullPointerException If the provided element is {@code null}.
      * @throws NoSuchElementException If the dropdown does not contain an option at the specified index.
      */
-
     public static void selectDropdownByIndex(WebElement element, int timeout, int index) {
         Select dropdown = new Select(Objects.requireNonNull(WaitUtil.waitForClickableElement(element, timeout)));
-        if (dropdown != null) {
+        if (!dropdown.getOptions().isEmpty()) {
             dropdown.selectByIndex(index);
             LOGGER.success("Successfully selected dropdown option by index" + " " + index);
+        }
+    }
+    /**
+     * <h2>{@code selectDropdownByVisibleText(...)}: Selects an option from a dropdown menu based on the visible text.</h2>
+     *
+     * <p>This method waits for the specified dropdown element to be clickable within the given timeout,
+     * then selects an option matching the provided visible text. If the selection is successful,
+     * a log message is recorded to confirm the action.</p>
+     *
+     * <p>This method assumes that exceptions are handled through the {@link WaitUtil#waitForClickableElement(WebElement, int)}</p>
+     *
+     * @param element the {@link WebElement} representing the dropdown menu
+     * @param timeout the maximum time to wait, in seconds, for the dropdown to become clickable
+     * @param text the visible text of the option to be selected within the dropdown
+     *
+     */
+    public static void selectDropdownByVisibleText(WebElement element, int timeout, String text) {
+        Select dropdown = new Select(Objects.requireNonNull(WaitUtil.waitForClickableElement(element, timeout)));
+        if (!dropdown.getOptions().isEmpty()) {
+            dropdown.selectByVisibleText(text);
+            LOGGER.success("Successfully selected dropdown option by text:" + " " + text);
         }
     }
     /*
