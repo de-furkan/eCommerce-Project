@@ -203,6 +203,27 @@ public class ElementUtils {
             LOGGER.success("Successfully selected dropdown option by text:" + " " + text);
         }
     }
+    /**
+     * <h2>{@code selectDropdownByValue(...)}: Selects an option from a dropdown menu based on the specified value attribute.</h2>
+     *
+     * <p>This method waits for the dropdown element to be clickable within the provided timeout period.
+     * It then selects an option with a matching value if the dropdown contains options.
+     * A log entry confirms the successful selection by value.</p>
+     *
+     * <p>This method assumes that exceptions are handled through the {@link WaitUtil#waitForClickableElement(WebElement, int)}</p>
+     *
+     * @param element the {@link WebElement} representing the dropdown menu.
+     * @param timeout the maximum wait time, in seconds, for the dropdown to become clickable.
+     * @param text the value attribute of the option to be selected within the dropdown.
+     *
+     */
+    public static void selectDropdownByValue(WebElement element, int timeout, String value) {
+        Select dropdown = new Select(Objects.requireNonNull(WaitUtil.waitForClickableElement(element, timeout)));
+        if (!dropdown.getOptions().isEmpty()) {
+            dropdown.selectByValue(value);
+            LOGGER.success("Successfully selected dropdown option by value:" + " " + value);
+        }
+    }
     /*
      *****************************************
      *          7. protected methods
