@@ -5,10 +5,48 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
 import java.util.Objects;
 import java.util.Random;
-
+/**
+ * <h1>Utility class extending {@link GenericElementUtils} to provide form-related interactions with web elements.</h1>
+ *
+ * <p>The {@code FormUtil} class contains methods that will specifically handle elements on a form.</p>
+ *
+ * <h2>Class Structure</h2>
+ * <ul>
+ *     <li><strong>Constants</strong>: Contains the {@code LOGGER} for consistent logging throughout the class.</li>
+ *     <li><strong>Constructors</strong>: Private constructor to prevent instantiation of this utility class.</li>
+ *     <li><strong>Public Methods</strong>: Various methods to handle form elements.
+ * </ul>
+ *
+ * <h2>Usage</h2>
+ * <p>This class is designed for automated form handling, particularly for dropdown elements,
+ * where selection can be made based on the option's index, visible text, value, or randomly.
+ * Each method incorporates wait handling to ensure the target element is interactable.</p>
+ *
+ * <pre><code>
+ *     FormUtil.selectRandomDropdownOption(
+ *                 DriverUtil.getDriverInstance()
+ *                  .findElement(By.cssSelector("body #dropdown")),
+ *                  10
+ *         );
+ * </code></pre>
+ *
+ * <h2>Logging</h2>
+ * <p>Logging is performed with {@link LoggerUtil}, providing both success and warning/error messages based on the
+ * outcome of each interaction. Logging aids in tracking actions for troubleshooting and debugging purposes.</p>
+ *
+ * <h2>Exceptions</h2>
+ * <p>Exceptions related to element interaction, visibility, and timeouts are managed primarily through
+ * {@link WaitUtil}, which handles standard WebDriver exceptions. Any additional handling is mentioned in individual methods.</p>
+ *
+ * @since 2024
+ * @see GenericElementUtils
+ * @see WaitUtil
+ * @see LoggerUtil
+ * @author Furkan O.
+ * @version 1.0
+ */
 public class FormUtil extends GenericElementUtils{
     /*
      *****************************************
