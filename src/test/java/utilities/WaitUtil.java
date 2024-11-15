@@ -1,12 +1,12 @@
 package utilities;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.bidi.log.Log;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.enums.TextFormat;
-
 import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -577,6 +577,30 @@ public class WaitUtil {
             LOGGER.error("An unexpected error occurred: " + e.getMessage());
         }
         return null;
+    }
+    /**
+     * <h2>{@code waitForAlertContext(...)}: Waits for an alert to be present within the specified timeout period.</h2>
+     *
+     * <p>This method uses {@link WebDriverWait} to wait until an alert context is detected on the page.
+     * If an alert appears within the given timeout, a success message is logged. If no alert is present
+     * within the timeout, a warning message is logged. For any unexpected exceptions, an error message
+     * is logged with the exception details.</p>
+     *
+     * @param driver the {@link WebDriver} instance used to detect the alert context
+     * @param timeoutInSeconds the maximum wait time, in seconds, for the alert to be present
+     *
+     * @throws NullPointerException if the provided {@code driver} is {@code null}
+     */
+    public static void waitForAlertContext(WebDriver driver, int timeoutInSeconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
+            wait.until(ExpectedConditions.alertIsPresent());
+            LOGGER.success("SUCCESS: Alert context present.");
+        } catch (TimeoutException e) {
+            LOGGER.warn("No alert present within " + timeoutInSeconds + " seconds.");
+        } catch (Exception e) {
+            LOGGER.error("Failed to detect alert due to an unexpected error: " + e.getMessage());
+        }
     }
     /**
      * <h2>{@code getDefaultImplicitWaitTime()}: Retrieves the default implicit wait time for WebDriver operations.</h2>
