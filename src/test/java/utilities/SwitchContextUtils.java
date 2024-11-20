@@ -92,6 +92,38 @@ public class SwitchContextUtils {
             LOGGER.error("An unexpected error occurred while dismissing the alert: " + e.getMessage());
         }
     }
+    /**
+     * <h2>{@code getAlertText(...)}: Retrieves the text content of an alert dialog if it is present within the specified timeout period.</h2>
+     *
+     * <p>This method waits for an alert to appear using {@link WaitUtil#waitForAlertContext(WebDriver, int)}.
+     * Once the alert is detected, it switches to the alert context and retrieves its text content.
+     * If no alert appears within the timeout or an error occurs, a warning or error log is recorded.</p>
+     *
+     * <p>If the alert text is successfully retrieved and is not blank, the method logs the alert text and returns it.
+     * If no alert is present or the text is empty, an empty string is returned.</p>
+     *
+     * @param driver the {@link WebDriver} instance used to interact with the alert
+     * @param timeoutInSeconds the maximum wait time, in seconds, for the alert to appear
+     * @return the text of the alert, or an empty string if the alert text is blank or no alert appears
+     *
+     * @throws NullPointerException if the provided {@code driver} is {@code null}
+     */
+    public static String getAlertText(WebDriver driver, int timeoutInSeconds) {
+
+        try {
+            WaitUtil.waitForAlertContext(driver, timeoutInSeconds);
+            Alert alert = driver.switchTo().alert();
+            if (!(alert.getText() == null || alert.getText().isBlank())) {
+                LOGGER.success("SUCCESS: Alert text successfully retrieved: " + alert.getText());
+                return alert.getText();
+            }
+        } catch (TimeoutException e) {
+            LOGGER.warn("No alert appeared within the timeout of " + timeoutInSeconds + " seconds.");
+        } catch (Exception e) {
+            LOGGER.error("An unexpected error occurred while retrieving alert text: " + e.getMessage());
+        }
+        return "";
+    }
     /*
      *****************************************
      *          7. protected methods
